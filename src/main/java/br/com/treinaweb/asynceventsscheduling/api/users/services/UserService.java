@@ -6,14 +6,14 @@ import org.springframework.stereotype.Service;
 
 import br.com.treinaweb.asynceventsscheduling.api.users.dtos.UserRequest;
 import br.com.treinaweb.asynceventsscheduling.api.users.dtos.UserResponse;
-import br.com.treinaweb.asynceventsscheduling.core.services.MailService;
+import br.com.treinaweb.asynceventsscheduling.core.publishers.NewUserPublisher;
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
 
-    private final MailService mailService;
+    private final NewUserPublisher newUserPublisher;
 
     public UserResponse create(UserRequest userRequest) {
         // Simular o cadastro de um usuário
@@ -22,12 +22,8 @@ public class UserService {
             userRequest.getName(),
             userRequest.getEmail()
         );
-        // Envio de e-mail de boas vindas
-        mailService.send(
-            user.getEmail(),
-            "Boas vindas",
-            "Seja bem-vindo a nossa aplicação!"
-        );
+        // Publicação do evento
+        newUserPublisher.publish(user.getEmail());
         // Finalização do método
         return user;
     }

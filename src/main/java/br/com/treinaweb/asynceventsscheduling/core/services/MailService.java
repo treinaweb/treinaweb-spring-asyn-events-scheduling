@@ -15,6 +15,15 @@ public class MailService {
     private static final Duration DELAY = Duration.ofSeconds(2);
 
     @Async
+    public void sendAsync(String to, String subject, String body) {
+        try {
+            Thread.sleep(DELAY);
+        } catch (InterruptedException e) {
+            log.error(e.getLocalizedMessage());
+        }
+        log.info("E-mail enviado para {}", to);
+    }
+    
     public void send(String to, String subject, String body) {
         try {
             Thread.sleep(DELAY);
